@@ -7,7 +7,7 @@ authors = ["The Enarx Project Developers"]
 homepage = "https://enarx.dev/"
 repository = "https://github.com/enarx/enarx"
 license = "Apache-2.0"
-keywords = ["sgx", "sev", "kvm", "tee"]
+keywords = ["sgx", "sev", "tdx", "kvm", "tee"]
 categories = ["os", "os::linux-apis", "network-programming", "hardware-support"]
 exclude = [".github/", "docs/", "tests/"]
 
@@ -19,6 +19,8 @@ gdb = ["dep:gdbstub", "enarx-shim-kvm/gdb", "enarx-shim-sgx/gdb"]
 dbg = [ "enarx-exec-wasmtime/dbg", "enarx-shim-kvm/dbg", "enarx-shim-sgx/dbg" ]
 disable-sgx-attestation = ["enarx-shim-sgx/disable-sgx-attestation"]
 bench = ["dep:tracing-flame", "enarx-exec-wasmtime/bench", "enarx-shim-kvm/bench", "enarx-shim-sgx/bench"]
+# Enable TDX support
+tdx = ["dep:kvm-bindings", "enarx-shim-kvm/tdx"]
 
 [dependencies]
 anyhow = { workspace = true, features = ["std"] }
@@ -227,6 +229,13 @@ x509-cert = { version = "0.2.4", features = ["std"], default-features = false }
 x86_64 = { version = "0.14.11", default-features = false }
 xsave = { version = "2.0.2", default-features = false }
 zeroize = { version = "1.5.4", features = ["alloc"], default-features = false }
+
+# TDX dependencies
+reqwest = { version = "0.11.18", features = ["blocking", "json"], optional = true }
+base64 = { version = "0.21.2", optional = true }
+byteorder = { version = "1.4.3", optional = true }
+# kvm-bindings already defined in workspace dependencies
+serde_json = { version = "1.0.100", features = ["std"], optional = true }
 
 # wasmtime and its pinned dependencies
 # these will need to be updated together

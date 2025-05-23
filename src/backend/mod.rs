@@ -9,6 +9,9 @@ pub mod sev;
 #[cfg(enarx_with_shim)]
 pub mod sgx;
 
+#[cfg(enarx_with_shim)]
+pub mod tdx;
+
 pub mod nil;
 
 #[cfg(enarx_with_shim)]
@@ -329,6 +332,10 @@ pub static BACKENDS: Lazy<Vec<Box<dyn Backend>>> = Lazy::new(|| {
         Box::new(kvm::Backend),
         #[cfg(not(enarx_with_shim))]
         Box::new(NotSupportedBackend("kvm")),
+        #[cfg(enarx_with_shim)]
+        Box::new(tdx::Backend),
+        #[cfg(not(enarx_with_shim))]
+        Box::new(NotSupportedBackend("tdx")),
         Box::<nil::Backend>::default(),
     ]
 });
